@@ -1,0 +1,71 @@
+import { ReactNode } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { LayoutDashboard, Bell, Settings, BarChart3, ArrowLeft, Shield } from 'lucide-react';
+import LanguageToggle from './LanguageToggle';
+import { useApp } from '@/context/AppContext';
+
+interface CaregiverLayoutProps {
+  children: ReactNode;
+  title?: string;
+}
+
+const tabs = [
+  { path: '/caregiver', icon: LayoutDashboard, labelEn: 'Overview', labelHi: 'अवलोकन' },
+  { path: '/caregiver/alerts', icon: Bell, labelEn: 'Alerts', labelHi: 'अलर्ट' },
+  { path: '/caregiver/controls', icon: Settings, labelEn: 'Controls', labelHi: 'नियंत्रण' },
+  { path: '/caregiver/analytics', icon: BarChart3, labelEn: 'Analytics', labelHi: 'विश्लेषण' },
+];
+
+const CaregiverLayout = ({ children, title }: CaregiverLayoutProps) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { t } = useApp();
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col max-w-md mx-auto">
+      {/* Header */}
+      <header className="flex items-center justify-between px-5 py-4 gradient-hero text-primary-foreground sticky top-0 z-40">
+        <div className="flex items-center gap-3">
+          <button onClick={() => navigate('/')} className="p-2 -ml-2 rounded-full hover:bg-primary-foreground/10 active:scale-95 transition-all">
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <div className="flex items-center gap-2">
+            <Shield className="w-5 h-5" />
+            <h1 className="text-lg font-extrabold truncate">
+              {title || t('Caregiver Dashboard', 'देखभालकर्ता डैशबोर्ड')}
+            </h1>
+          </div>
+        </div>
+        <LanguageToggle />
+      </header>
+
+      {/* Content */}
+      <main className="flex-1 px-5 py-6 pb-24">
+        {children}
+      </main>
+
+      {/* Bottom Nav */}
+      <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-card border-t border-border shadow-elevated z-40">
+        <div className="flex justify-around py-2">
+          {tabs.map((tab) => {
+            const isActive = location.pathname === tab.path;
+            return (
+              <button
+                key={tab.path}
+                onClick={() => navigate(tab.path)}
+                className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-all ${
+                  isActive ? 'text-primary' : 'text-muted-foreground'
+                }`}
+              >
+                <tab.icon className={`w-5 h-5 ${isActive ? 'text-primary' : ''}`} />
+                <span className="text-xs font-bold">{t(tab.labelEn, tab.labelHi)}</span>
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+    </div>
+  );
+};
+
+export default CaregiverLayout;
