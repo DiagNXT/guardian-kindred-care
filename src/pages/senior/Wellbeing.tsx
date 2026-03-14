@@ -16,19 +16,28 @@ const painAreas = [
 ];
 
 const Wellbeing = () => {
-  const { t } = useApp();
+  const { t, setWellbeing, addAlert } = useApp();
   const [mood, setMood] = useState<Mood>(null);
   const [painArea, setPainArea] = useState<PainArea>(null);
 
-  const handleMood = (selected: Mood) => {
+  const handleMood = async (selected: Mood) => {
     setMood(selected);
     if (selected !== 'not_well') {
+      await setWellbeing({ mood: selected, painArea: null, timestamp: new Date().toISOString() });
       toast({ title: selected === 'good' ? t('😊 Glad to hear!', '😊 सुनकर खुशी हुई!') : t('🙂 Take care!', '🙂 ध्यान रखें!') });
     }
   };
 
-  const handlePain = (area: string) => {
+  const handlePain = async (area: string) => {
     setPainArea(area);
+    await setWellbeing({ mood: 'not_well', painArea: area, timestamp: new Date().toISOString() });
+    await addAlert({
+      type: 'distress',
+      message: `Reported feeling unwell – ${area.toLowerCase()} area`,
+      messageHi: `अस्वस्थ महसूस किया – ${area.toLowerCase()} क्षेत्र`,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      severity: 'critical',
+    });
     toast({
       title: t('🚨 Caregiver Alerted!', '🚨 देखभालकर्ता को सूचित किया गया!'),
       description: t(`Pain reported in: ${area}. Help is coming.`, `दर्द की जगह: ${area}। मदद आ रही है।`),

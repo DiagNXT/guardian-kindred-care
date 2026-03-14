@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Credentials files (never commit these)
+*.json
+!components.json
+!postcss.config.js
+!tailwind.config.ts
+!eslint.config.js

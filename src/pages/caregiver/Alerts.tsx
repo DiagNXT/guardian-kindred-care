@@ -17,12 +17,13 @@ const severityIcons = {
 };
 
 const Alerts = () => {
-  const { t } = useApp();
+  const { t, dynamicAlerts } = useApp();
+  const allAlerts = [...dynamicAlerts, ...alerts];
 
   return (
     <CaregiverLayout title={t('Alerts', 'अलर्ट')}>
       <div className="space-y-3">
-        {alerts.map((alert, i) => {
+        {allAlerts.map((alert, i) => {
           const Icon = severityIcons[alert.type as keyof typeof severityIcons] || AlertTriangle;
           return (
             <div

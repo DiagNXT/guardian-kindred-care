@@ -30,7 +30,7 @@ const SeniorLayout = ({ children, title, showBack = false }: SeniorLayoutProps) 
             </div>
           )}
           <h1 className="text-lg font-extrabold text-foreground truncate">
-            {title || t('Digital Guardian', 'डिजिटल गार्डियन')}
+            {title || t('AURA Care', 'आरा केयर')}
           </h1>
         </div>
         <LanguageToggle />
